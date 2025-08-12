@@ -10,16 +10,17 @@
 <img width="2534" height="1540" alt="image" src="https://github.com/user-attachments/assets/1ce455e6-2782-42ef-9eca-c10324166fed" />
 
 
-- **TCPエリア入力項目**
-・**TCP 名称**：サーバの名称
-・**TCP IP**：サーバのIPアドレスを入力(IPv4)
-・**TCP PORT**：サーバのポート番号
-- **UDPエリア入力項目**
-・**TCP 名称**：サーバの名称
-・**TCP IP**：サーバのIPアドレスを入力(IPv4)
-・**TCP PORT**：サーバのポート番号
-- **Statusエリア**
-・作成されたサーバの一覧
+- **TCPエリア入力項目**  
+・**TCP 名称**：サーバの名称  
+・**TCP IP**：サーバのIPアドレスを入力(IPv4)  
+・**TCP PORT**：サーバのポート番号  
+- **UDPエリア入力項目**  
+・**TCP 名称**：サーバの名称  
+・**TCP IP**：サーバのIPアドレスを入力(IPv4)  
+・**TCP PORT**：サーバのポート番号  
+- **Statusエリア**  
+・作成されたサーバの一覧(JSON形式)  
+
 
 上記３項目を入力後、TCP Start / UDP Start ボタンを押下したらサーバが作成される。作成されたサーバは、下の**Statusエリア**に表示される。
 
