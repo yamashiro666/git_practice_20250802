@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TCP/UDP Server Admin</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; }
+    .row { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+    label { min-width: 40px; }
+    input { padding: .4rem .6rem; }
+    button { padding: .5rem .9rem; cursor: pointer; }
+    .ok { color: #0a7; }
+    .ng { color: #c33; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  </style>
+</head>
+<body>
+  <h1>TCP/UDP Server Admin</h1>
+
+  <div class="card">
+    <h2>TCP</h2>
+    <div class="row">
+      <label>IP</label>
+      <input id="tcp-ip" value="0.0.0.0" />
+      <label>Port</label>
+      <input id="tcp-port" type="number" value="5000" />
+      <button onclick="start('tcp')">Start</button>
+      <button onclick="stop('tcp')">Stop</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>UDP</h2>
+    <div class="row">
+      <label>IP</label>
+      <input id="udp-ip" value="127.0.0.1" />
+      <label>Port</label>
+      <input id="udp-port" type="number" value="5001" />
+      <button onclick="start('udp')">Start</button>
+      <button onclick="stop('udp')">Stop</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Status</h2>
+    <pre id="status" class="mono">loading...</pre>
+  </div>
+
+  <script>
+    async function start(kind) {
+      const ip = document.getElementById(`${kind}-ip`).value;
+      const port = parseInt(document.getElementById(`${kind}-port`).value, 10);
+      await fetch(`/api/server/${kind}/start`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ip, port })
+      });
+      await refresh();
+    }
+
+    async function stop(kind) {
+      await fetch(`/api/server/${kind}/stop`, { method: 'POST' });
+      await refresh();
+    }
+
+    async function refresh() {
+      const res = await fetch('/api/server/status');
+      const json = await res.json();
+      document.getElementById('status').textContent = JSON.stringify(json, null, 2);
+    }
+
+    setInterval(refresh, 1500);
+    refresh();
+  </script>
+</body>
+</html>

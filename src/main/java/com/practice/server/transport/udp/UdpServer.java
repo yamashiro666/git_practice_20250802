@@ -1,17 +1,27 @@
 package com.practice.server.transport.udp;
 
-import com.practice.server.core.AbstractNetworkServer;
-
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
+
+import com.practice.server.core.AbstractNetworkServer;
 
 public class UdpServer extends AbstractNetworkServer {
     private DatagramSocket socket;
 
+    public UdpServer(String ip, int port, ExecutorService workers) {
+    	super(ip, port, workers); // 親のフィールドに保持
+    }
+
     public UdpServer(ExecutorService workers) {
-        super(workers);
+    	super(workers); // 親のフィールドに保持
     }
 
     @Override

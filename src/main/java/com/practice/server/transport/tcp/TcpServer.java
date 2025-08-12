@@ -1,17 +1,28 @@
 package com.practice.server.transport.tcp;
 
-import com.practice.server.core.AbstractNetworkServer;
-
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
+
+import com.practice.server.core.AbstractNetworkServer;
 
 public class TcpServer extends AbstractNetworkServer {
     private ServerSocket server;
 
+    public TcpServer(String ip, int port, ExecutorService workers) {
+    	super(ip, port, workers); // 親のフィールドに保持
+    }
+
     public TcpServer(ExecutorService workers) {
-        super(workers);
+    	super(workers); // 親のフィールドに保持
     }
 
     @Override

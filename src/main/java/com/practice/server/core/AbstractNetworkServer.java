@@ -11,12 +11,25 @@ import com.practice.server.api.NetworkServer;
 import com.practice.server.util.ConfigLoader;
 
 public abstract class AbstractNetworkServer implements NetworkServer {
-	private final String ipAddr;
-    private final int port;
+	protected final String ipAddr;
+	private final int port;
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final ExecutorService workers;
     private Thread acceptorThread;
 
+    /** 
+     * GUI用コンストラクタ
+     * @param ipAddr バインドするIPアドレス
+     * @param port   バインドするポート番号
+     * @param workers 処理用スレッドプール
+     */
+    protected AbstractNetworkServer(String ipAddr, int port, ExecutorService workers) {
+        this.ipAddr = Objects.requireNonNull(ipAddr, "ipAddr");
+        this.port = port;
+        this.workers = Objects.requireNonNull(workers, "workers");
+    }
+    
+    // CUI用コンストラクタ
     protected AbstractNetworkServer(ExecutorService workers) {
         this.workers = workers;
 
@@ -80,8 +93,12 @@ public abstract class AbstractNetworkServer implements NetworkServer {
     @Override
     public final boolean isRunning() { return running.get(); }
 
-    // IPとポート番号の取得
+    // IPの取得
+    @Override
     public final String getIpAddr() { return ipAddr; }
+    
+    // ポート番号の取得
+    @Override
     public final int getPort() { return port; }
 
     protected ExecutorService workers() { return workers; }
