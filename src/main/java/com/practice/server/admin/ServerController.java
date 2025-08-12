@@ -43,13 +43,13 @@ public class ServerController {
     @GetMapping("/status")
     public Map<String, Object> status() {
         var tcp = new java.util.LinkedHashMap<String, Object>();
-        tcp.put("name", "TCP Server");
+        tcp.put("name", manager.name("tcp"));
         tcp.put("running", manager.isRunning("tcp"));
         Integer tport = manager.port("tcp");
         if (tport != null) tcp.put("port", tport);
 
         var udp = new java.util.LinkedHashMap<String, Object>();
-        udp.put("name", "UDP Server");
+        udp.put("name", manager.name("udp"));
         udp.put("running", manager.isRunning("udp"));
         Integer uport = manager.port("udp");
         if (uport != null) udp.put("port", uport);

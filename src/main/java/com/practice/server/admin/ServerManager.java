@@ -15,8 +15,12 @@ import com.practice.server.transport.udp.UdpServer;
  */
 @org.springframework.stereotype.Component
 public class ServerManager {
-    private final Map<String, NetworkServer> servers = new ConcurrentHashMap<>(); // key: "tcp" / "udp"
+	
+    private final Map<String, NetworkServer> servers = new ConcurrentHashMap<>();
     private final Map<String, ExecutorService> pools = new ConcurrentHashMap<>();
+    
+    private static final String DEFAULT_TCP_NAME = "TCP Server";
+    private static final String DEFAULT_UDP_NAME = "UDP Server";
 
     public synchronized void startTcp(String srvName, String ip, int port) throws IOException {
         stop("tcp");
@@ -58,5 +62,14 @@ public class ServerManager {
     public Integer port(String kind) {
         NetworkServer s = servers.get(kind);
         return (s == null) ? null : s.getPort();
+    }
+    
+    public String name(String kind) {
+        NetworkServer s = servers.get(kind);
+        if (s != null) return s.getName();
+        // 未起動時の表示名
+        if ("tcp".equalsIgnoreCase(kind)) return DEFAULT_TCP_NAME;
+        if ("udp".equalsIgnoreCase(kind)) return DEFAULT_UDP_NAME;
+        return null;
     }
 }
