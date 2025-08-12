@@ -9,12 +9,21 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    id 'application'
 }
+
+application {
+    mainClassName = 'com.practice.server.admin.AdminApplication'
+}
+
+group = 'com.practice'
+version = '1.0.0'
 
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -26,4 +35,8 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.3.2'
 }
+
