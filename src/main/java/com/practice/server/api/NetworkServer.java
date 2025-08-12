@@ -6,6 +6,6 @@ public interface NetworkServer extends AutoCloseable {
     void start() throws IOException;
     void stop() throws IOException;
     boolean isRunning();
-    int port();
+//    int getPort();
     @Override default void close() throws IOException { stop(); }
 }

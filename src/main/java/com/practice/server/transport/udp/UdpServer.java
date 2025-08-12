@@ -10,15 +10,23 @@ import java.util.concurrent.ExecutorService;
 public class UdpServer extends AbstractNetworkServer {
     private DatagramSocket socket;
 
-    public UdpServer(int port, ExecutorService workers) {
-        super(port, workers);
+    public UdpServer(ExecutorService workers) {
+        super(workers);
     }
 
     @Override
     protected void doStartResources() throws SocketException {
-        socket = new DatagramSocket(port());
+        InetAddress bindAddr = null;
+		try {
+			bindAddr = InetAddress.getByName(getIpAddr());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		// ソケットを作成
+        socket = new DatagramSocket(new InetSocketAddress(bindAddr, getPort()));
         socket.setReuseAddress(true);
-        socket.setSoTimeout(500); // stop のために軽くポーリング
+        socket.setSoTimeout(500);
+        System.out.println("UDP listening on " + getIpAddr() + ":" + getPort());
     }
 
     @Override
@@ -59,4 +67,16 @@ public class UdpServer extends AbstractNetworkServer {
     protected void doStopResources() {
         if (socket != null && !socket.isClosed()) socket.close();
     }
+
+	@Override
+	protected String getConfigPrefix() {
+		return "udp";
+	}
+
+	@Override
+	protected int defaultPort() {
+		return 5001;
+	}
+
+
 }

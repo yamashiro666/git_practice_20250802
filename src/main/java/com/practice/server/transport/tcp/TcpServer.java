@@ -10,15 +10,18 @@ import java.util.concurrent.ExecutorService;
 public class TcpServer extends AbstractNetworkServer {
     private ServerSocket server;
 
-    public TcpServer(int port, ExecutorService workers) {
-        super(port, workers);
+    public TcpServer(ExecutorService workers) {
+        super(workers);
     }
 
     @Override
     protected void doStartResources() throws IOException {
         server = new ServerSocket();
         server.setReuseAddress(true);
-        server.bind(new InetSocketAddress(port()));
+        InetAddress bindAddr = InetAddress.getByName(getIpAddr());
+        // IPとポートをバインドする
+        server.bind(new InetSocketAddress(bindAddr, getPort()));
+        System.out.println("TCP listening on " + getIpAddr() + ":" + getPort());
     }
 
     @Override
@@ -54,4 +57,15 @@ public class TcpServer extends AbstractNetworkServer {
     protected void doStopResources() throws IOException {
         if (server != null && !server.isClosed()) server.close();
     }
+
+	@Override
+	protected String getConfigPrefix() {
+		return "tcp";
+	}
+
+	@Override
+	protected int defaultPort() {
+		return 5000;
+	}
+
 }
