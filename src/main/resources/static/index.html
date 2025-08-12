@@ -22,24 +22,20 @@
   <div class="card">
     <h2>TCP</h2>
     <div class="row">
-      <label>IP</label>
-      <input id="tcp-ip" value="0.0.0.0" />
-      <label>Port</label>
-      <input id="tcp-port" type="number" value="5000" />
-      <button onclick="start('tcp')">Start</button>
-      <button onclick="stop('tcp')">Stop</button>
+        <label>TCP 名称: <input id="tcpName" placeholder="TCP Server"></label>
+        <label>TCP IP:   <input id="tcpIp"   value="127.0.0.1"></label>
+        <label>TCP Port: <input id="tcpPort" type="number" value="5000"></label>
+        <button id="tcpStart">TCP Start</button>
     </div>
   </div>
 
   <div class="card">
     <h2>UDP</h2>
     <div class="row">
-      <label>IP</label>
-      <input id="udp-ip" value="127.0.0.1" />
-      <label>Port</label>
-      <input id="udp-port" type="number" value="5001" />
-      <button onclick="start('udp')">Start</button>
-      <button onclick="stop('udp')">Stop</button>
+        <label>UDP 名称: <input id="udpName" placeholder="UDP Server"></label>
+        <label>UDP IP:   <input id="udpIp"   value="127.0.0.1"></label>
+        <label>UDP Port: <input id="udpPort" type="number" value="5001"></label>
+        <button id="udpStart">UDP Start</button>
     </div>
   </div>
 
@@ -49,29 +45,45 @@
   </div>
 
   <script>
-    async function start(kind) {
-      const ip = document.getElementById(`${kind}-ip`).value;
-      const port = parseInt(document.getElementById(`${kind}-port`).value, 10);
-      await fetch(`/api/server/${kind}/start`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ip, port })
+    async function postJson(url, body) {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json().catch(()=> ({}));
+    }
+    
+    document.getElementById('tcpStart').onclick = async () => {
+      await postJson('/api/server/tcp/start', {
+        name: document.getElementById('tcpName').value,
+        ip:   document.getElementById('tcpIp').value,
+        port: Number(document.getElementById('tcpPort').value)
       });
       await refresh();
-    }
-
-    async function stop(kind) {
-      await fetch(`/api/server/${kind}/stop`, { method: 'POST' });
+    };
+    
+    document.getElementById('udpStart').onclick = async () => {
+      await postJson('/api/server/udp/start', {
+        name: document.getElementById('udpName').value,
+        ip:   document.getElementById('udpIp').value,
+        port: Number(document.getElementById('udpPort').value)
+      });
       await refresh();
-    }
-
+    };
+    
     async function refresh() {
-      const res = await fetch('/api/server/status');
-      const json = await res.json();
-      document.getElementById('status').textContent = JSON.stringify(json, null, 2);
+      try {
+        const r = await fetch('/api/server/status');
+        if (!r.ok) return;
+        const s = await r.json();
+        // s.tcp.name / s.udp.name を画面に表示（任意）
+        console.log(s);
+      } catch(e) { /* ネットワークエラーは無視 */ }
     }
-
-    setInterval(refresh, 1500);
     refresh();
+    setInterval(refresh, 3000);
   </script>
 </body>
 </html>

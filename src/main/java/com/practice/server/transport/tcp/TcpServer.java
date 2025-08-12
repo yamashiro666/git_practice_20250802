@@ -17,8 +17,8 @@ import com.practice.server.core.AbstractNetworkServer;
 public class TcpServer extends AbstractNetworkServer {
     private ServerSocket server;
 
-    public TcpServer(String ip, int port, ExecutorService workers) {
-    	super(ip, port, workers); // 親のフィールドに保持
+    public TcpServer(String srvName, String ip, int port, ExecutorService workers) {
+    	super(srvName, ip, port, workers); // 親のフィールドに保持
     }
 
     public TcpServer(ExecutorService workers) {

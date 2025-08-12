@@ -16,8 +16,8 @@ import com.practice.server.core.AbstractNetworkServer;
 public class UdpServer extends AbstractNetworkServer {
     private DatagramSocket socket;
 
-    public UdpServer(String ip, int port, ExecutorService workers) {
-    	super(ip, port, workers); // 親のフィールドに保持
+    public UdpServer(String srvName, String ip, int port, ExecutorService workers) {
+    	super(srvName, ip, port, workers); // 親のフィールドに保持
     }
 
     public UdpServer(ExecutorService workers) {

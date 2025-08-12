@@ -11,6 +11,7 @@ import com.practice.server.api.NetworkServer;
 import com.practice.server.util.ConfigLoader;
 
 public abstract class AbstractNetworkServer implements NetworkServer {
+	private final String srvName;
 	protected final String ipAddr;
 	private final int port;
     private final AtomicBoolean running = new AtomicBoolean(false);
@@ -23,7 +24,8 @@ public abstract class AbstractNetworkServer implements NetworkServer {
      * @param port   バインドするポート番号
      * @param workers 処理用スレッドプール
      */
-    protected AbstractNetworkServer(String ipAddr, int port, ExecutorService workers) {
+    protected AbstractNetworkServer(String srvName, String ipAddr, int port, ExecutorService workers) {
+    	this.srvName = srvName;
         this.ipAddr = Objects.requireNonNull(ipAddr, "ipAddr");
         this.port = port;
         this.workers = Objects.requireNonNull(workers, "workers");
@@ -31,6 +33,7 @@ public abstract class AbstractNetworkServer implements NetworkServer {
     
     // CUI用コンストラクタ
     protected AbstractNetworkServer(ExecutorService workers) {
+    	this.srvName = ""; // ダミー用
         this.workers = workers;
 
         Properties p = ConfigLoader.load();
@@ -93,6 +96,10 @@ public abstract class AbstractNetworkServer implements NetworkServer {
     @Override
     public final boolean isRunning() { return running.get(); }
 
+    // 名前の取得
+    @Override
+    public final String getName() { return srvName; }
+    
     // IPの取得
     @Override
     public final String getIpAddr() { return ipAddr; }

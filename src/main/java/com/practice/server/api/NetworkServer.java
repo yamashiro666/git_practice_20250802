@@ -10,6 +10,8 @@ public interface NetworkServer extends AutoCloseable {
     
 	boolean isRunning();
     
+	String getName();
+	
 	String getIpAddr();
 	
 	int getPort();

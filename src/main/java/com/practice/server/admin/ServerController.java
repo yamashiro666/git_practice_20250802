@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.practice.server.dto.TcpDTO;
+import com.practice.server.dto.UdpDTO;
+
 @RestController
 @RequestMapping("/api/server")
 public class ServerController {
@@ -18,21 +21,19 @@ public class ServerController {
     public ServerController(ServerManager manager) { this.manager = manager; }
 
     @PostMapping("/tcp/start")
-    public ResponseEntity<?> startTcp(@RequestBody Map<String, Object> body) throws Exception {
-        String ip = (String) body.getOrDefault("ip", "0.0.0.0");
-        int port = ((Number) body.getOrDefault("port", 5000)).intValue();
-        manager.startTcp(ip, port);
-        return ResponseEntity.ok(Map.of("status", "started", "kind", "tcp", "ip", ip, "port", port));
+    public Map<String,Object> startTcp(@RequestBody TcpDTO req) throws Exception {
+        String srvName = (req.srvName == null || req.srvName.isBlank()) ? "TCP Server" : req.srvName;
+        manager.startTcp(srvName, req.ip, req.port);
+        return Map.of("ok", true);
     }
 
     @PostMapping("/udp/start")
-    public ResponseEntity<?> startUdp(@RequestBody Map<String, Object> body) throws Exception {
-        String ip = (String) body.getOrDefault("ip", "0.0.0.0");
-        int port = ((Number) body.getOrDefault("port", 5001)).intValue();
-        manager.startUdp(ip, port);
-        return ResponseEntity.ok(Map.of("status", "started", "kind", "udp", "ip", ip, "port", port));
+    public Map<String,Object> startUdp(@RequestBody UdpDTO req) throws Exception {
+        String srvName = (req.srvName == null || req.srvName.isBlank()) ? "UDP Server" : req.srvName;
+        manager.startUdp(srvName, req.ip, req.port);
+        return Map.of("ok", true);
     }
-
+    
     @PostMapping("/{kind}/stop")
     public ResponseEntity<?> stop(@PathVariable String kind) {
         manager.stop(kind);
@@ -42,11 +43,13 @@ public class ServerController {
     @GetMapping("/status")
     public Map<String, Object> status() {
         var tcp = new java.util.LinkedHashMap<String, Object>();
+        tcp.put("name", "TCP Server");
         tcp.put("running", manager.isRunning("tcp"));
-        Integer tport = manager.port("tcp");            // ← 未起動なら null
-        if (tport != null) tcp.put("port", tport);      // null は入れない
+        Integer tport = manager.port("tcp");
+        if (tport != null) tcp.put("port", tport);
 
         var udp = new java.util.LinkedHashMap<String, Object>();
+        udp.put("name", "UDP Server");
         udp.put("running", manager.isRunning("udp"));
         Integer uport = manager.port("udp");
         if (uport != null) udp.put("port", uport);

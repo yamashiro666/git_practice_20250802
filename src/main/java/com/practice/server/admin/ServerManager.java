@@ -18,20 +18,20 @@ public class ServerManager {
     private final Map<String, NetworkServer> servers = new ConcurrentHashMap<>(); // key: "tcp" / "udp"
     private final Map<String, ExecutorService> pools = new ConcurrentHashMap<>();
 
-    public synchronized void startTcp(String ip, int port) throws IOException {
+    public synchronized void startTcp(String srvName, String ip, int port) throws IOException {
         stop("tcp");
         ExecutorService pool = Executors.newFixedThreadPool(Math.max(2, Runtime.getRuntime().availableProcessors()));
         pools.put("tcp", pool);
-        NetworkServer tcp = new TcpServer(ip, port, pool); // ip/port を明示渡し版のコンストラクタ
+        NetworkServer tcp = new TcpServer(srvName, ip, port, pool);
         tcp.start();
         servers.put("tcp", tcp);
     }
 
-    public synchronized void startUdp(String ip, int port) throws IOException {
+    public synchronized void startUdp(String srvName, String ip, int port) throws IOException {
         stop("udp");
         ExecutorService pool = Executors.newFixedThreadPool(Math.max(2, Runtime.getRuntime().availableProcessors()));
         pools.put("udp", pool);
-        NetworkServer udp = new UdpServer(ip, port, pool); // 同上
+        NetworkServer udp = new UdpServer(srvName, ip, port, pool);
         udp.start();
         servers.put("udp", udp);
     }
