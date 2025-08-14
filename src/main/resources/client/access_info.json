@@ -1,0 +1,28 @@
+{
+  "clients": [
+    {
+      "name": "Client1",
+      "enable": true,
+      "protocol": "TCP",
+      "ip": "127.0.0.1",
+      "port": 5000,
+      "connections": 3
+    },
+    {
+      "name": "Client2",
+      "enable": false,
+      "protocol": "UDP",
+      "ip": "127.0.0.1",
+      "port": 5001,
+      "connections": 1
+    },
+    {
+      "name": "Client3",
+      "enable": true,
+      "protocol": "TCP",
+      "ip": "127.0.0.1",
+      "port": 5002,
+      "connections": 20
+    }
+  ]
+}
